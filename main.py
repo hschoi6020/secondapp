@@ -28,10 +28,7 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# 기본 통계 요약
-st.subheader('기본 통계 요약')
-stats = pd.Series(emissions, index=years).describe()
-st.write(stats)
+
 
 # 추세 요약
 st.subheader('추세 요약')
