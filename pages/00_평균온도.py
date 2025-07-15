@@ -20,7 +20,7 @@ st.dataframe(df.head(), use_container_width=True)
 # 3. 컬럼 리스트 추출
 cols = df.columns.tolist()
 
-# 4. 사용자 인터랙션
+# 4. 사이드바 설정
 st.sidebar.header("시각화 설정")
 x_axis = st.sidebar.selectbox("X 축", cols, index=0)
 y_axis = st.sidebar.selectbox("Y 축", cols, index=1 if len(cols) > 1 else 0)
@@ -38,7 +38,7 @@ if st.sidebar.checkbox("X 축을 날짜로 변환", value=False):
     except Exception as e:
         st.sidebar.error(f"날짜 변환 실패: {e}")
 
-
+# 6. 1990~2015 범위 필터링
 df_filtered = df.copy()
 if is_date or pd.api.types.is_numeric_dtype(df[x_axis]):
     if is_date:
@@ -49,42 +49,47 @@ if is_date or pd.api.types.is_numeric_dtype(df[x_axis]):
         mask = (df_filtered[x_axis] >= 1990) & (df_filtered[x_axis] <= 2015)
         df_filtered = df_filtered.loc[mask]
 
-
-# 7. 필터된 데이터 미리보기
-st.subheader("1950–2015 범위 데이터 미리보기")
+st.subheader("1990–2015 범위 데이터 미리보기")
 st.dataframe(df_filtered.head(), use_container_width=True)
 
-# 8. Plotly 차트 생성
+# 7. Plotly 차트 생성
 if chart_type == "선형 차트 (Line)":
-    fig = px.line(
+    # Scatter + 추세선(OLS)으로 최고기온 상승 추세 강조
+    fig = px.scatter(
         df_filtered,
         x=x_axis,
         y=y_axis,
-        title=f"{y_axis} vs {x_axis} (1950–2015)",
-        markers=True
+        title=f"{y_axis} 상승 추세 (1990–2015)",
+        trendline="ols",
+        trendline_color_override="red"
     )
+    # 데이터 포인트와 선을 모두 보이도록 모드 설정
+    fig.update_traces(selector=dict(mode="markers"), mode="lines+markers")
+
 elif chart_type == "산점도 (Scatter)":
     fig = px.scatter(
         df_filtered,
         x=x_axis,
         y=y_axis,
-        title=f"{y_axis} vs {x_axis} (1950–2015)",
+        title=f"{y_axis} vs {x_axis} (1990–2015)",
         trendline="ols"
     )
+
 elif chart_type == "막대 차트 (Bar)":
     fig = px.bar(
         df_filtered,
         x=x_axis,
         y=y_axis,
-        title=f"{y_axis} by {x_axis} (1950–2015)"
+        title=f"{y_axis} by {x_axis} (1990–2015)"
     )
+
 else:  # 히스토그램
     fig = px.histogram(
         df_filtered,
         x=x_axis,
         nbins=30,
-        title=f"{x_axis} 분포 (1950–2015)"
+        title=f"{x_axis} 분포 (1990–2015)"
     )
 
-# 9. Plot 렌더링
+# 8. 차트 렌더링
 st.plotly_chart(fig, use_container_width=True)
