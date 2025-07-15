@@ -15,7 +15,6 @@ st.set_page_config(
 
 # 제목
 st.title("🌡️ 지구 평균 기온 상승의 영향")
-st.markdown("### 자동차 CO2 배출량 증가가 미치는 환경 영향")
 st.markdown("---")
 
 # 데이터 생성
