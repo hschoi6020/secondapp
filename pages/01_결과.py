@@ -129,7 +129,6 @@ with col2:
     # 주요 통계
     st.metric("상관계수", f"{correlation:.3f}")
     st.metric("R² 값", f"{r_value**2:.3f}")
-    st.metric("p-value", f"{p_value:.2e}")
     
     # 변화량 계산
     co2_change = df['Car_CO2_Emissions'].iloc[-1] - df['Car_CO2_Emissions'].iloc[0]
@@ -229,7 +228,7 @@ with conclusion_col1:
     st.markdown("""
     ### 📊 데이터 분석 결과
     - **강한 양의 상관관계**: 자동차 CO2 배출량이 증가할수록 평균 기온도 상승
-    - **통계적 유의성**: p-value가 매우 낮아 통계적으로 유의한 관계
+    - **설명력 높음**: R² 값이 높아 모델의 설명력이 우수
     - **지속적 증가**: 1990년부터 2016년까지 지속적인 증가 추세
     """)
 
