@@ -76,7 +76,7 @@ slope, intercept, r_value, p_value, std_err = stats.linregress(df['Car_CO2_Emiss
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    st.subheader("📈 시계열 분석")
+    st.subheader("📈  분석")
     
     # 시계열 차트
     fig_time = make_subplots(
