@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 
 # CSV 파일 로드
-df = pd.read_csv("dioxide.csv")  # ← 여기에 파일 경로 입력
+df = pd.read_csv("dioxide-dioxide.csv")  # ← 여기에 파일 경로 입력
 
 # 날짜에서 연도 추출
 df['Year'] = pd.to_datetime(df['dt']).dt.year
