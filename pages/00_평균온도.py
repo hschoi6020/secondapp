@@ -1,30 +1,26 @@
-import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-st.title("🌡️ 연도별 평균 기온 추이 시각화")
+# CSV 파일 불러오기
+df = pd.read_csv("dioxide-dioxide(1).csv")  # ← 파일명을 실제로 존재하는 파일명으로 바꿔주세요
 
-# 파일 업로드 받기
-uploaded_file = st.file_uploader("CSV 파일을 업로드하세요", type="csv")
+# 날짜 → 연도 추출
+df['Year'] = pd.to_datetime(df['dt']).dt.year
 
-if uploaded_file is not None:
-    # CSV 읽기
-    df = pd.read_csv(uploaded_file)
+# 연도 필터링: 1950~2015년
+df_filtered = df[(df['Year'] >= 1950) & (df['Year'] <= 2015)]
 
-    # 날짜 → 연도 변환
-    df['Year'] = pd.to_datetime(df['dt']).dt.year
+# 연도별 평균 온도 계산
+yearly_avg = df_filtered.groupby('Year')['LandAverageTemperature'].mean().reset_index()
 
-    # 연도별 평균 계산
-    yearly_avg = df.groupby('Year')['LandAverageTemperature'].mean().reset_index()
+# Plotly 그래프 그리기
+fig = px.line(
+    yearly_avg,
+    x='Year',
+    y='LandAverageTemperature',
+    title='🌡️ 연도별 평균 기온 추이 (1950–2015)',
+    labels={'LandAverageTemperature': '평균 기온 (℃)', 'Year': '연도'},
+    markers=True
+)
 
-    # Plotly 그래프
-    fig = px.line(
-        yearly_avg,
-        x='Year',
-        y='LandAverageTemperature',
-        title='연도별 평균 기온 추이',
-        labels={'LandAverageTemperature': '평균 기온 (℃)', 'Year': '연도'},
-        markers=True
-    )
-
-    st.plotly_chart(fig)
+fig.show()
