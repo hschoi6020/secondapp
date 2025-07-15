@@ -92,6 +92,4 @@ else:
     st.warning("데이터를 불러올 수 없어 대시보드를 표시할 수 없습니다.")
 
 
-# --- 푸터 ---
-st.markdown("---")
-st.markdown("Made with ❤️ by Gemini")
+
