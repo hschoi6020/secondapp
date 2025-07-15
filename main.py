@@ -1,31 +1,31 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+import matplotlib.pyplot as plt
 
-st.title("🚗 연도별 자동차 데이터 시각화")
+# CSV 파일 로드
+df = pd.read_csv('dioxide.csv', sep=';')
 
-# 파일 업로드
-uploaded_file = st.file_uploader("CSV 파일을 업로드하세요", type="csv")
+# 'Cars' 데이터 추출
+cars_data = df[df['Category'] == 'Cars'].iloc[:, 1:].T
+cars_data.columns = ['CO2 Emissions']
+cars_data.index = cars_data.index.astype(int)
 
-if uploaded_file:
-    # 데이터 읽기
-    df = pd.read_csv(uploaded_file)
+# 타이틀과 설명
+st.title('자동차 CO2 배출량 연도별 분석')
+st.write("""
+이 앱은 1990년부터 2016년까지의 자동차 CO2 배출량 변화를 시각화하고 간단한 분석을 제공합니다.
+""")
 
-    # 연도 컬럼 추정: 'year', 'model_year' 등 포함된 열 찾기
-    year_cols = [col for col in df.columns if 'year' in col.lower()]
+# 라인 그래프 시각화
+st.subheader('연도별 CO2 배출량 추이')
+st.line_chart(cars_data)
 
-    if not year_cols:
-        st.error("⚠️ 'year'가 포함된 연도 관련 열을 찾을 수 없습니다.")
-    else:
-        year_col = st.selectbox("연도 컬럼을 선택하세요", year_cols)
+# 기본 통계 정보
+st.subheader('기본 통계')
+st.write(cars_data.describe())
 
-        # 연도별 개수 집계
-        year_count = df[year_col].value_counts().sort_index().reset_index()
-        year_count.columns = ['Year', 'Count']
-
-        # Plotly 그래프
-        fig = px.bar(year_count, x='Year', y='Count',
-                     labels={'Year': '연도', 'Count': '자동차 수'},
-                     title='연도별 자동차 등록 수')
-
-        st.plotly_chart(fig)
+# 추세 분석
+st.subheader('추세 요약')
+start_emission = cars_data.iloc[0]['CO2 Emissions']
+end_emission = cars_data.iloc[-1]['CO2 Emissions']
+change
